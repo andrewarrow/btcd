@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	// 1BoatSLRHtKNngkdXEeobR76b53LETtpyT
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/davecgh/go-spew/spew"
 )
