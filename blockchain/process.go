@@ -149,11 +149,11 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 
 	for _, tx := range block.Transactions() {
 		for _, r := range tx.MsgTx().TxIn {
-			fmt.Printf("from %x\n", r.SignatureScript)
+			fmt.Printf("\n\nfrom %x\n", r.SignatureScript)
 		}
 		for _, r := range tx.MsgTx().TxOut {
-			fmt.Print("BTC", float64(tx.MsgTx().TxOut[0].Value)/100000000.0)
-			fmt.Printf("to %x\n", r.PkScript)
+			fmt.Println("BTC", float64(r.Value)/100000000.0)
+			fmt.Printf("to %x\n\n", r.PkScript)
 		}
 	}
 
