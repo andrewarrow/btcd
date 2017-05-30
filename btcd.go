@@ -6,13 +6,9 @@ package main
 
 import (
 	"fmt"
-	"net"
-	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"runtime"
 	"runtime/debug"
-	"runtime/pprof"
 
 	"github.com/btcsuite/btcd/blockchain/indexers"
 	"github.com/btcsuite/btcd/limits"
@@ -50,41 +46,10 @@ func btcdMain(serverChan chan<- *server) error {
 	// Show version at startup.
 	btcdLog.Infof("Version %s", version())
 
-	// Enable http profiling server if requested.
-	if cfg.Profile != "" {
-		go func() {
-			listenAddr := net.JoinHostPort("", cfg.Profile)
-			btcdLog.Infof("Profile server listening on %s", listenAddr)
-			profileRedirect := http.RedirectHandler("/debug/pprof",
-				http.StatusSeeOther)
-			http.Handle("/", profileRedirect)
-			btcdLog.Errorf("%v", http.ListenAndServe(listenAddr, nil))
-		}()
-	}
-
-	// Write cpu profile if requested.
-	if cfg.CPUProfile != "" {
-		f, err := os.Create(cfg.CPUProfile)
-		if err != nil {
-			btcdLog.Errorf("Unable to create cpu profile: %v", err)
-			return err
-		}
-		pprof.StartCPUProfile(f)
-		defer f.Close()
-		defer pprof.StopCPUProfile()
-	}
-
-	// Perform upgrades to btcd as new versions require it.
-	if err := doUpgrades(); err != nil {
-		btcdLog.Errorf("%v", err)
-		return err
-	}
-
 	// Return now if an interrupt signal was triggered.
 	if interruptRequested(interruptedChan) {
 		return nil
 	}
-
 	// Load the block database.
 	db, err := loadBlockDB()
 	if err != nil {

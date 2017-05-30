@@ -147,6 +147,12 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 	b.chainLock.Lock()
 	defer b.chainLock.Unlock()
 
+	for _, tx := range block.Transactions() {
+		if len(tx.MsgTx().TxOut) > 0 {
+			fmt.Println("22222", tx.MsgTx().TxOut[0].Value)
+		}
+	}
+
 	fastAdd := flags&BFFastAdd == BFFastAdd
 	dryRun := flags&BFDryRun == BFDryRun
 
@@ -182,6 +188,7 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 	// used to eat memory, and ensuring expected (versus claimed) proof of
 	// work requirements since the previous checkpoint are met.
 	blockHeader := &block.MsgBlock().Header
+
 	checkpointBlock, err := b.findPreviousCheckpoint()
 	if err != nil {
 		return false, false, err

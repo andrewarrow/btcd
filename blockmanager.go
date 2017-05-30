@@ -6,6 +6,7 @@ package main
 
 import (
 	"container/list"
+	"fmt"
 	"net"
 	"os"
 	"path/filepath"
@@ -721,6 +722,7 @@ func (b *blockManager) fetchHeaderBlocks() {
 func (b *blockManager) handleHeadersMsg(hmsg *headersMsg) {
 	// The remote peer is misbehaving if we didn't request headers.
 	msg := hmsg.headers
+
 	numHeaders := len(msg.Headers)
 	if !b.headersFirstMode {
 		bmgrLog.Warnf("Got %d unrequested headers from %s -- "+
@@ -1046,29 +1048,37 @@ out:
 		case m := <-b.msgChan:
 			switch msg := m.(type) {
 			case *newPeerMsg:
+				fmt.Println("newPeerMsg")
 				b.handleNewPeerMsg(candidatePeers, msg.peer)
 
 			case *txMsg:
+				fmt.Println("txMsg")
 				b.handleTxMsg(msg)
 				msg.peer.txProcessed <- struct{}{}
 
 			case *blockMsg:
+				//fmt.Println("blockMsg")
 				b.handleBlockMsg(msg)
 				msg.peer.blockProcessed <- struct{}{}
 
 			case *invMsg:
+				fmt.Println("1invMsg")
 				b.handleInvMsg(msg)
 
 			case *headersMsg:
+				fmt.Println("1headerMsg")
 				b.handleHeadersMsg(msg)
 
 			case *donePeerMsg:
+				fmt.Println("donePeer")
 				b.handleDonePeerMsg(candidatePeers, msg.peer)
 
 			case getSyncPeerMsg:
+				fmt.Println("getSyncPeerMsg")
 				msg.reply <- b.syncPeer
 
 			case processBlockMsg:
+				fmt.Println("processBlockMsg")
 				_, isOrphan, err := b.chain.ProcessBlock(
 					msg.block, msg.flags)
 				if err != nil {
