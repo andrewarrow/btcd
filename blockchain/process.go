@@ -147,13 +147,16 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 	b.chainLock.Lock()
 	defer b.chainLock.Unlock()
 
-	for _, tx := range block.Transactions() {
-		for _, r := range tx.MsgTx().TxIn {
-			fmt.Printf("\n\nfrom %x\n", r.SignatureScript)
-		}
-		for _, r := range tx.MsgTx().TxOut {
-			fmt.Println("BTC", float64(r.Value)/100000000.0)
-			fmt.Printf("to %x\n\n", r.PkScript)
+	for i, tx := range block.Transactions() {
+		//fmt.Println(len(tx.MsgTx().TxIn), len(tx.MsgTx().TxOut))
+		//for j, txIn := range tx.MsgTx().TxIn {
+		//fmt.Printf("%d %d: %x\n", i, j, txIn.SignatureScript)
+		//numSigOps := txscript.GetPreciseSigOpCount(sigScript, pkScript, true)
+		//fmt.Printf("\n\nfrom %x\n", r.SignatureScript)
+		//}
+		for j, txOut := range tx.MsgTx().TxOut {
+			fmt.Printf("%d %d: BTC %f ", i, j, float64(txOut.Value)/100000000.0)
+			fmt.Printf("to %x\n\n", txOut.PkScript)
 		}
 	}
 

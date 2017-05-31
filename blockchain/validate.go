@@ -779,7 +779,6 @@ func (b *BlockChain) checkBlockContext(block *btcutil.Block, prevNode *blockNode
 
 		// Ensure all transactions in the block are finalized.
 		for _, tx := range block.Transactions() {
-			fmt.Println("22222", tx)
 			if !IsFinalizedTransaction(tx, blockHeight,
 				blockTime) {
 
