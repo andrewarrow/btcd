@@ -5,6 +5,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 	"runtime"
@@ -114,7 +115,33 @@ func btcdMain(serverChan chan<- *server) error {
 	return nil
 }
 
+/*
+4104be11746c7fa7e3f2b46057db84da5f42a0416e67f3297ea8adf7d3006069ce6f9eb902c702a5b68639d7e26fe60983677b8d3d9f100661205c10bb78c486e308ac
+
+1 0: BTC 0.500000 to 76a914da90c671eb03bfddf1d62dd1bdf520f060cf41c088ac
+
+1 1: BTC 9.500000 to 76a91483c89f3972a02540a7783bc630349303e41c148188ac
+
+2 0: BTC 100.138033 to 76a91407b48fb827158183cf79ed7dd20bf5a992b83c7d88ac
+
+3 0: BTC 0.010061 to 76a9146b79bacb72a14abe12694489e3680b261bfc27b188ac
+
+3 1: BTC 40.000000 to 76a914e8a93cf5bdd2a0298406d225484dbfe100cf07b588ac
+
+4 0: BTC 0.010000 to 76a914c097228cf6fb88d8f10191ce320d02c8a471760d88ac
+
+4 1: BTC 10.940000 to 76a91476b57630f3142bfd25e5cbdad0b684c456b33ddf88ac
+
+5 0: BTC 0.010000 to 76a9148569bc2b41b8e47db044fe50c93511391069d95188ac
+*/
+func foo() {
+	h := "76a914da90c671eb03bfddf1d62dd1bdf520f060cf41c088ac"
+	data, err := hex.DecodeString(h)
+	fmt.Println(data, err)
+	os.Exit(1)
+}
 func main() {
+	foo()
 	// Use all processor cores.
 	runtime.GOMAXPROCS(runtime.NumCPU())
 

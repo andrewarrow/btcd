@@ -154,6 +154,16 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 		//numSigOps := txscript.GetPreciseSigOpCount(sigScript, pkScript, true)
 		//fmt.Printf("\n\nfrom %x\n", r.SignatureScript)
 		//}
+		/*
+			scriptPubKey: 76a914975efcba1e058667594dc57146022ec46560a63c88ac
+			76 - OP_DUP opcode
+			a9 - HASH160 opcode
+			14 - length opcode
+			975efcba1e058667594dc57146022ec46560a63c - data with length 14 (20 in dec)
+			88 - OP_EQUALVERIFY opcode
+			ac - OP_CHECKSIG opcode
+
+		*/
 		for j, txOut := range tx.MsgTx().TxOut {
 			fmt.Printf("%d %d: BTC %f ", i, j, float64(txOut.Value)/100000000.0)
 			fmt.Printf("to %x\n\n", txOut.PkScript)
@@ -195,6 +205,7 @@ func (b *BlockChain) ProcessBlock(block *btcutil.Block, flags BehaviorFlags) (bo
 	// used to eat memory, and ensuring expected (versus claimed) proof of
 	// work requirements since the previous checkpoint are met.
 	blockHeader := &block.MsgBlock().Header
+	fmt.Printf("|%v|\n", blockHeader.Timestamp)
 
 	checkpointBlock, err := b.findPreviousCheckpoint()
 	if err != nil {
